@@ -1,7 +1,18 @@
-import { Animated, StyleSheet, View } from 'react-native';
-import React, { useRef } from 'react';
+import {
+  Animated,
+  BackHandler,
+  StyleSheet,
+  ToastAndroid,
+  View,
+} from 'react-native';
+import React, { useRef, useEffect, useState } from 'react';
 import Header from '../components/Header';
 import TabSection from '../components/TabSection';
+import Colors from '../constants/color';
+import {
+  handleDoubleBackPressExit,
+  removeBackHandler,
+} from '../utils/backHandlerUtil';
 
 const HEADER_HEIGHT = 80;
 const TAB_HEIGHT = 50;
@@ -15,6 +26,15 @@ const Profile = () => {
     extrapolate: 'clamp',
   });
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      'hardwareBackPress',
+      handleDoubleBackPressExit,
+    );
+
+    return () => removeBackHandler(backHandler);
+  }, []);
+
   return (
     <View style={styles.container}>
       <Animated.View
@@ -25,9 +45,9 @@ const Profile = () => {
       >
         <Header />
       </Animated.View>
-      
-      <TabSection 
-        scrollY={scrollY} 
+
+      <TabSection
+        scrollY={scrollY}
         headerHeight={HEADER_HEIGHT}
         tabHeight={TAB_HEIGHT}
       />
@@ -47,7 +67,6 @@ const styles = StyleSheet.create({
     left: 0,
     right: 0,
     zIndex: 10,
-    height: HEADER_HEIGHT,
-    backgroundColor: 'white',
+    backgroundColor: Colors.background,
   },
 });

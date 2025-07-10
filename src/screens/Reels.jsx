@@ -3,21 +3,18 @@ import {
   FlatList,
   StyleSheet,
   Dimensions,
-  StatusBar,
   TouchableOpacity,
   View,
   Text,
   Animated,
   Easing,
   Image,
-  SafeAreaView,
-  Platform,
 } from 'react-native';
 import Video from 'react-native-video';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
 
-const { height, width } = Dimensions.get('window');
+const { height: screenHeight, width } = Dimensions.get('screen');
 
 const Reels = ({ route }) => {
   const navigation = useNavigation();
@@ -25,7 +22,6 @@ const Reels = ({ route }) => {
   const [currentIndex, setCurrentIndex] = useState(index);
   const [muted, setMuted] = useState(true);
   const [likedVideos, setLikedVideos] = useState({});
-  const [showComments, setShowComments] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
   const flatListRef = useRef(null);
 
@@ -53,7 +49,7 @@ const Reels = ({ route }) => {
   }).current;
 
   const viewabilityConfig = useRef({
-    itemVisiblePercentThreshold: 90,
+    itemVisiblePercentThreshold: 50,
     waitForInteraction: true,
   }).current;
 
@@ -95,10 +91,7 @@ const Reels = ({ route }) => {
     return (
       <View style={styles.itemContainer}>
         {isCurrent ? (
-          <TouchableOpacity
-            activeOpacity={1}
-            style={styles.videoContainer}
-          >
+          <TouchableOpacity activeOpacity={1} style={styles.videoContainer}>
             <Video
               source={{ uri: item.uri }}
               style={styles.video}
@@ -110,7 +103,7 @@ const Reels = ({ route }) => {
                 minBufferMs: 15000,
                 maxBufferMs: 30000,
                 bufferForPlaybackMs: 2500,
-                bufferForPlaybackAfterRebufferMs: 5000
+                bufferForPlaybackAfterRebufferMs: 5000,
               }}
             />
 
@@ -124,20 +117,8 @@ const Reels = ({ route }) => {
                   size={35}
                   color={isLiked ? '#ff3040' : '#fff'}
                 />
-                <Text style={styles.sidebarText}>{formatCount(item.likes)}</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.sidebarButton}
-                onPress={() => setShowComments(!showComments)}
-              >
-                <MaterialIcons
-                  name="chat-bubble-outline"
-                  size={26}
-                  color="#ffffff"
-                />
                 <Text style={styles.sidebarText}>
-                  {formatCount(item.comments)}
+                  {formatCount(item.likes)}
                 </Text>
               </TouchableOpacity>
 
@@ -170,9 +151,7 @@ const Reels = ({ route }) => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar hidden />
-
+    <View style={styles.container}>
       <TouchableOpacity
         style={styles.backButton}
         onPress={() => navigation.goBack()}
@@ -196,15 +175,16 @@ const Reels = ({ route }) => {
         data={videosData}
         keyExtractor={item => item.id}
         renderItem={renderItem}
-        pagingEnabled
+        snapToInterval={screenHeight}
+        snapToAlignment="start"
         decelerationRate="fast"
         showsVerticalScrollIndicator={false}
         onViewableItemsChanged={onViewableItemsChanged}
         viewabilityConfig={viewabilityConfig}
         initialScrollIndex={index}
         getItemLayout={(data, idx) => ({
-          length: height,
-          offset: height * idx,
+          length: screenHeight,
+          offset: screenHeight * idx,
           index: idx,
         })}
         windowSize={3}
@@ -213,20 +193,7 @@ const Reels = ({ route }) => {
         removeClippedSubviews={true}
         initialNumToRender={1}
       />
-
-      {showComments && (
-        <View style={styles.commentsContainer}>
-          <TouchableOpacity
-            style={styles.closeComments}
-            onPress={() => setShowComments(false)}
-          >
-            <MaterialIcons name="close" size={30} color="#fff" />
-          </TouchableOpacity>
-          <Text style={styles.commentsTitle}>Comments</Text>
-          <Text style={{color:'white'}}>Comment for testing by Deepak Rai</Text>
-        </View>
-      )}
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -237,8 +204,7 @@ const styles = StyleSheet.create({
   },
   itemContainer: {
     width,
-    height,
-    backgroundColor: '#000',
+    height: screenHeight-20,
   },
   videoContainer: {
     flex: 1,
@@ -319,30 +285,6 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
     padding: 5,
     borderRadius: 20,
-  },
-  commentsContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    height: '60%',
-    backgroundColor: 'rgba(0,0,0,0.9)',
-    borderTopLeftRadius: 15,
-    borderTopRightRadius: 15,
-    padding: 20,
-    zIndex: 2,
-  },
-  closeComments: {
-    position: 'absolute',
-    top: 15,
-    right: 15,
-  },
-  commentsTitle: {
-    color: '#fff',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
   },
 });
 

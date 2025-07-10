@@ -14,6 +14,7 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../constants/color';
 
 const { width: windowWidth, height: windowHeight } = Dimensions.get('window');
 
@@ -23,10 +24,13 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
   const [refreshing, setRefreshing] = useState(false);
   const [currentPlaying, setCurrentPlaying] = useState(null);
   const [likedPosts, setLikedPosts] = useState({});
+  const [sound, setSound] = useState(false);
   const heartAnimations = useRef({}).current;
 
-  const fetchPosts = async () => {
+  const fetchPosts = async (isRefresh = false) => {
     try {
+      if (!isRefresh) setLoading(true);
+
       const response = await fetch(
         'https://picsum.photos/v2/list?page=1&limit=20',
       );
@@ -49,8 +53,11 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
     } catch (error) {
       console.error('Fetch error:', error);
     } finally {
-      setLoading(false);
-      setRefreshing(false);
+      if (isRefresh) {
+        setRefreshing(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 
@@ -60,7 +67,9 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
 
   const handleRefresh = () => {
     setRefreshing(true);
-    fetchPosts();
+    setTimeout(() => {
+      fetchPosts(true);
+    }, 2000);
   };
 
   const handleLike = postId => {
@@ -105,6 +114,7 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
 
     const handlePress = () => {
       const now = Date.now();
+      setSound(!sound);
       if (now - lastTap < 300) {
         handleDoubleTap(item.id);
       }
@@ -112,7 +122,7 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
     };
 
     return (
-      <View style={[styles.postContainer, ]}>
+      <View style={[styles.postContainer]}>
         <View style={styles.postHeader}>
           <View style={styles.userInfo}>
             <Image
@@ -132,15 +142,15 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
               <Video
                 source={{ uri: item.uri }}
                 style={styles.media}
-                muted
+                muted={!sound}
                 repeat
                 resizeMode="cover"
                 paused={currentPlaying !== item.id}
               />
               <MaterialIcons
-                name="play-circle-outline"
-                size={48}
-                color="#fff"
+                name={sound ? 'volume-up' : 'volume-off'}
+                size={24}
+                color={Colors.primary}
                 style={styles.playIcon}
               />
             </View>
@@ -234,7 +244,10 @@ const PostGrid = ({ scrollY, headerHeight, tabHeight }) => {
   return (
     <Animated.FlatList
       data={posts}
-      style={{ paddingTop: headerHeight + tabHeight }}
+      style={{
+        paddingTop: headerHeight + tabHeight,
+        backgroundColor: Colors.background,
+      }}
       renderItem={renderItem}
       keyExtractor={item => item.id}
       refreshControl={
@@ -258,7 +271,7 @@ const styles = StyleSheet.create({
   postContainer: {
     width: windowWidth,
     marginBottom: 16,
-    backgroundColor: '#fff',
+    backgroundColor: Colors.background,
   },
   postHeader: {
     flexDirection: 'row',
@@ -283,7 +296,7 @@ const styles = StyleSheet.create({
   media: {
     width: '100%',
     height: windowWidth,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: Colors.primary,
   },
   videoContainer: {
     position: 'relative',
@@ -293,10 +306,8 @@ const styles = StyleSheet.create({
   },
   playIcon: {
     position: 'absolute',
-    top: '50%',
-    left: '50%',
-    marginLeft: -24,
-    marginTop: -24,
+    top: '5%',
+    right: '5%',
   },
   heartOverlay: {
     ...StyleSheet.absoluteFillObject,

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useNavigation } from '@react-navigation/native';
+import Colors from '../constants/color';
 
 const { width } = Dimensions.get('window');
 const itemSize = width / 3;
@@ -86,7 +87,7 @@ const TaggedItems = ({ scrollY, headerHeight, tabHeight }) => {
             style={styles.thumbnail}
           />
           <View style={styles.videoOverlay}>
-            <MaterialIcons name="play-circle-outline" size={20} color="white" />
+            <MaterialIcons name="play-circle-outline" size={20} color={Colors.primary} />
           </View>
           <Text style={styles.videoViews}>{item.views} views</Text>
         </View>
@@ -96,7 +97,7 @@ const TaggedItems = ({ scrollY, headerHeight, tabHeight }) => {
 
       {item.type === 'photo' && (
         <View style={styles.likesContainer}>
-          <MaterialIcons name="favorite" size={14} color="white" />
+          <MaterialIcons name="favorite" size={14} color={Colors.primary} />
           <Text style={styles.likesCount}>{item.likes}</Text>
         </View>
       )}
@@ -122,7 +123,7 @@ export default TaggedItems;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: Colors.background,
   },
   listContent: {
     paddingBottom: 50,
@@ -156,7 +157,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 8,
     left: 8,
-    color: 'white',
+    color: Colors.primary,
     fontSize: 12,
     fontWeight: '600',
     textShadowColor: 'rgba(0,0,0,0.5)',
@@ -171,7 +172,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   likesCount: {
-    color: 'white',
+    color: Colors.primary,
     fontSize: 12,
     fontWeight: '600',
     marginLeft: 4,

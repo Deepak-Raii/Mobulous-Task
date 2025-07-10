@@ -6,6 +6,7 @@ import PostGrid from './PostGrid';
 import VideoList from './VideoList';
 import TaggedItems from './TaggedItems';
 import AboutInfo from './AboutInfo';
+import Colors from '../constants/color';
 
 const TabSection = ({
   scrollY = new Animated.Value(0),
@@ -21,10 +22,8 @@ const TabSection = ({
     { key: 'about', title: 'About' },
   ]);
 
-  // Create a new animated value for the tab bar
   const tabBarScrollY = useRef(new Animated.Value(0)).current;
 
-  // Sync with the main scrollY
   scrollY.addListener(({ value }) => {
     tabBarScrollY.setValue(value);
   });
@@ -89,12 +88,12 @@ const TabSection = ({
         <TabBar
           {...props}
           style={{
-            backgroundColor: 'white',
+            backgroundColor: Colors.primary,
             height: tabHeight,
           }}
-          activeColor="black"
-          inactiveColor="gray"
-          indicatorStyle={{ backgroundColor: 'black' }}
+          activeColor={Colors.secondary}
+          inactiveColor={Colors.grey}
+          indicatorStyle={{ backgroundColor: Colors.secondary }}
         />
       </Animated.View>
     );

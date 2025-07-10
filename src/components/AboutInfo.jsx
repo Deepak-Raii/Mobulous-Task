@@ -10,6 +10,7 @@ import {
   useWindowDimensions,
 } from 'react-native';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import Colors from '../constants/color';
 
 const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
   const { height } = useWindowDimensions();
@@ -48,10 +49,9 @@ const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
 
   const handleAction = async url => {
     try {
-      const supported = await Linking.canOpenURL(url);
-      if (supported) {
+      
         await Linking.openURL(url);
-      }
+      
     } catch (error) {
       console.log('Error opening URL:', error);
     }
@@ -60,8 +60,8 @@ const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
   const contactItems = [
     {
       icon: 'mail',
-      text: 'deepakrai.dev@gmail.com',
-      url: 'mailto:deepakrai.dev@gmail.com',
+      text: 'deepakraii9696@gmail.com',
+      url: 'mailto:deepakraii9696@gmail.com',
     },
     {
       icon: 'link',
@@ -71,11 +71,11 @@ const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
   ];
 
   const featureItems = [
-    'Secure end-to-end encryption',
-    'Cross-platform synchronization',
-    'Regular feature updates',
-    '24/7 customer support',
-    'Customizable interface',
+    'Features 1',
+    'Features 2',
+    'Features 3',
+    'Features 4',
+    'Features 5',
   ];
 
   return (
@@ -95,7 +95,6 @@ const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
           { useNativeDriver: true },
         )}
       >
-
         <Animated.View style={[styles.developerCard, { opacity: fadeAnim1 }]}>
           <Image
             source={{ uri: 'https://avatars.githubusercontent.com/u/488' }}
@@ -176,19 +175,19 @@ const AboutInfo = ({ scrollY, headerHeight, tabHeight }) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#F7FAFC',
+    backgroundColor: Colors.background,
   },
   scrollContainer: {
     paddingHorizontal: 20,
   },
   developerCard: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 16,
     padding: 24,
     marginBottom: 24,
     alignItems: 'center',
     elevation: 3,
-    marginTop:20
+    marginTop: 20,
   },
   avatar: {
     width: 120,
@@ -206,12 +205,12 @@ const styles = StyleSheet.create({
   },
   developerTitle: {
     fontSize: 16,
-    color: '#4A5568',
+    color: Colors.grey,
     marginBottom: 12,
   },
   developerBio: {
     fontSize: 14,
-    color: '#718096',
+    color: Colors.grey,
     textAlign: 'center',
     lineHeight: 22,
     marginBottom: 16,
@@ -235,7 +234,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   card: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.background,
     borderRadius: 16,
     padding: 24,
     marginBottom: 20,

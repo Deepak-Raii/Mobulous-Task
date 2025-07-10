@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Video from 'react-native-video';
+import Colors from '../constants/color';
 
 const { width } = Dimensions.get('window');
 const itemSize = width / 3;
@@ -46,7 +47,7 @@ const VideoList = ({ scrollY, headerHeight, tabHeight }) => {
       <MaterialIcons
         name="play-circle-outline"
         size={26}
-        color="#fff"
+        color={Colors.primary}
         style={styles.playIcon}
       />
     </View>
@@ -58,7 +59,7 @@ const VideoList = ({ scrollY, headerHeight, tabHeight }) => {
       numColumns={3}
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
-      style={{ paddingTop: headerHeight + tabHeight }}
+      style={{ paddingTop: headerHeight + tabHeight, backgroundColor:Colors.background }}
     />
   );
 };
